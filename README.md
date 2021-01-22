@@ -58,3 +58,88 @@
 
 ### Step8 재귀에서 반복문으로 
 - Step7에서 backward()를 재귀로 표현 -> 메모리 비효율 -> 반복문으로 수정
+
+
+### Step9 함수를 더 편리하게 
+- 개선1. 파이썬 함수로 이용하기 
+  ```python
+  # AS-IS
+  f = Square()
+  y = f(x)
+
+
+  # TO-BE  
+  def square(x): return Square()(x)
+  y = square(x)
+   ```
+- 개선2. backward 메소드 간소화
+  - x.grad = np.array(1.0) 안하도록 Variable backward 에서 구현
+  ```python
+    if self.grad is None: self.grad = np.one_likes(self.data)
+   ```
+- 개선3. ndarray만 취급하기
+  1. 입력 차원에서 개선 : isinstance로 입력값 확인
+  2. 출력 차원에서 개선 : 입력값이 ndarray여도 출력값이 int, float가 나올 수 있음. 
+  ```python
+    def as_array(x):
+      if np.isscalar(x): return np.array(x)
+   
+    Class Function:
+              ... 
+        output = Variable(as_array(y))
+  ```
+
+### Step10 테스트
+- 역전파 구현 테스트: 수치미분과의 기울기 확인(gradient checking) [[numerical_diff()]](https://github.com/SooDevv/DeZero3/blob/a745ea0a30542a366033d76bb3675869f9a32299/steps/step10.py#L66)
+- ndarray 인스턴스간의 값이 가까운지 판정하는 함수 [[np.allclose]](https://github.com/SooDevv/DeZero3/blob/a745ea0a30542a366033d76bb3675869f9a32299/steps/step10.py#L93)
+
+
+### Step11 가변 길이 인수 (순전파 편)
+- 함수의 입출력(=변수)가 하나가 아닌 여러개(data structure: List)
+- list comprehension으로 구현 [[code]](https://github.com/SooDevv/DeZero3/blob/a745ea0a30542a366033d76bb3675869f9a32299/steps/step11.py#L35)
+
+
+### Step12 가변 길이 인수 (개선편)
+- 여러개의 입력값을 받을 수 있도록 unpacking 
+   ```python
+  # AS-IS
+  class Function(self, inputs):
+                 ...
+     xs = [x.data for x in inputs]  
+     ys = self.forward(xs)
+  
+  # TO-BE
+  class Function(self, *inputs):  <- 인수들을 하나로 모아서 받을 수 있음.
+                 ...
+     xs = [x.data for x in inputs] 
+     ys = self.forward(*xs)        <-
+   ```
+
+
+### Step13 가변 길이 인수 (역전파 편)
+- Variable backward method 또한 변경. [[code]](https://github.com/SooDevv/DeZero3/blob/a745ea0a30542a366033d76bb3675869f9a32299/steps/step13.py#L23)
+
+
+### Step14 같은 변수 반복 사용 
+입력변수들이 하나의 변수 일 때 현재 코드에서 생기는 문제점.
+- 문제1. 같은 변수여서 미분값을 덮어쓰는 문제 
+  + `x.grad = gx if x.grad is not None else x.grad + gx` 로 해결
+- 문제2. 동일한 변수를 이용하여 다른 계산 
+  + `def clear_grad(): return self.data = None` 로 해결
+
+
+### Step15 복잡한 계산 그래프 (이론편)
+- backward 시, 
+    ```python
+    x = Variable()
+    a = A(x)
+    b, c = B(a), C(a)
+    y = D(b, c)
+    
+    # AS-IS
+    y.backward()
+    D -> B or C -> A -> B or C -> A 로 호출 (A의 중복 및 A는 B와 C가 끝난 후 실행되어야함)
+  
+    # TO-BE
+    D -> B -> C -> A (generation이는 속성을 추가해서 세대별로 관리하자)
+    ```
