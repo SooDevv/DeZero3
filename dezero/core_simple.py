@@ -93,7 +93,7 @@ class Variable:
                     y().grad = None
 
     def clear_grad(self):
-        self.data = None
+        self.grad = None
 
 
 def as_array(x):
