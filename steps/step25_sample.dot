@@ -1,0 +1,16 @@
+digraph g {
+1 [label=a, color=orange, style=filled]
+2 [label=b, color=orange, style=filled]
+3 [label=c, color=orange, style=filled]
+4 [label=Add, color=lightblue, style=filled, shape=diamond]
+5 [label=Mul, color=lightblue, style=filled, shape=diamond]
+6 [label=y, color=orange, style=filled]
+7 [label=d, color=orange, style=filled]
+1 -> 4
+2 -> 4
+4 -> 3
+3 -> 5
+5 -> 6
+7 -> 5
+}
+
