@@ -1,0 +1,219 @@
+digraph g {
+4635998048 [label="z", color=orange, style=filled]
+4635997952 [label="Mul", color=lightblue, style=filled, shape=box]
+4636001472 -> 4635997952
+4635997856 -> 4635997952
+4635997952 -> 4635998048
+4636001472 [label="", color=orange, style=filled]
+4635997856 [label="", color=orange, style=filled]
+4635997664 [label="Add", color=lightblue, style=filled, shape=box]
+4635997568 -> 4635997664
+4635997760 -> 4635997664
+4635997664 -> 4635997856
+4635997568 [label="", color=orange, style=filled]
+4635997760 [label="", color=orange, style=filled]
+4635997472 [label="Mul", color=lightblue, style=filled, shape=box]
+4636002480 -> 4635997472
+4635997376 -> 4635997472
+4635997472 -> 4635997568
+4636002480 [label="", color=orange, style=filled]
+4635997376 [label="", color=orange, style=filled]
+4635997280 [label="Add", color=lightblue, style=filled, shape=box]
+4635996704 -> 4635997280
+4635997184 -> 4635997280
+4635997280 -> 4635997376
+4635996704 [label="", color=orange, style=filled]
+4635997184 [label="", color=orange, style=filled]
+4635996896 [label="Mul", color=lightblue, style=filled, shape=box]
+4635996944 -> 4635996896
+4635997088 -> 4635996896
+4635996896 -> 4635997184
+4635996944 [label="", color=orange, style=filled]
+4635997088 [label="", color=orange, style=filled]
+4635996800 [label="Pow", color=lightblue, style=filled, shape=box]
+4635968560 -> 4635996800
+4635996800 -> 4635996944
+4635968560 [label="y", color=orange, style=filled]
+4635996608 [label="Sub", color=lightblue, style=filled, shape=box]
+4636004160 -> 4635996608
+4635996512 -> 4635996608
+4635996608 -> 4635996704
+4636004160 [label="", color=orange, style=filled]
+4635996512 [label="", color=orange, style=filled]
+4635996416 [label="Mul", color=lightblue, style=filled, shape=box]
+4635996320 -> 4635996416
+4635968560 -> 4635996416
+4635996416 -> 4635996512
+4635996320 [label="", color=orange, style=filled]
+4635968560 [label="y", color=orange, style=filled]
+4636004256 [label="Mul", color=lightblue, style=filled, shape=box]
+4634647328 -> 4636004256
+4635996224 -> 4636004256
+4636004256 -> 4635996320
+4634647328 [label="x", color=orange, style=filled]
+4635996224 [label="", color=orange, style=filled]
+4636004064 [label="Add", color=lightblue, style=filled, shape=box]
+4636003680 -> 4636004064
+4636003968 -> 4636004064
+4636004064 -> 4636004160
+4636003680 [label="", color=orange, style=filled]
+4636003968 [label="", color=orange, style=filled]
+4636003776 [label="Mul", color=lightblue, style=filled, shape=box]
+4635968560 -> 4636003776
+4636003872 -> 4636003776
+4636003776 -> 4636003968
+4635968560 [label="y", color=orange, style=filled]
+4636003872 [label="", color=orange, style=filled]
+4636003584 [label="Add", color=lightblue, style=filled, shape=box]
+4636003008 -> 4636003584
+4636003488 -> 4636003584
+4636003584 -> 4636003680
+4636003008 [label="", color=orange, style=filled]
+4636003488 [label="", color=orange, style=filled]
+4636003200 [label="Mul", color=lightblue, style=filled, shape=box]
+4636003248 -> 4636003200
+4636003392 -> 4636003200
+4636003200 -> 4636003488
+4636003248 [label="", color=orange, style=filled]
+4636003392 [label="", color=orange, style=filled]
+4636003104 [label="Pow", color=lightblue, style=filled, shape=box]
+4634647328 -> 4636003104
+4636003104 -> 4636003248
+4634647328 [label="x", color=orange, style=filled]
+4636002816 [label="Sub", color=lightblue, style=filled, shape=box]
+4636002912 -> 4636002816
+4636002720 -> 4636002816
+4636002816 -> 4636003008
+4636002912 [label="", color=orange, style=filled]
+4636002720 [label="", color=orange, style=filled]
+4636002432 [label="Mul", color=lightblue, style=filled, shape=box]
+4634647328 -> 4636002432
+4636002624 -> 4636002432
+4636002432 -> 4636002720
+4634647328 [label="x", color=orange, style=filled]
+4636002624 [label="", color=orange, style=filled]
+4636002336 [label="Pow", color=lightblue, style=filled, shape=box]
+4636002240 -> 4636002336
+4636002336 -> 4636002480
+4636002240 [label="", color=orange, style=filled]
+4636002144 [label="Sub", color=lightblue, style=filled, shape=box]
+4636001760 -> 4636002144
+4636002048 -> 4636002144
+4636002144 -> 4636002240
+4636001760 [label="", color=orange, style=filled]
+4636002048 [label="", color=orange, style=filled]
+4636001856 [label="Mul", color=lightblue, style=filled, shape=box]
+4635968560 -> 4636001856
+4636001952 -> 4636001856
+4636001856 -> 4636002048
+4635968560 [label="y", color=orange, style=filled]
+4636001952 [label="", color=orange, style=filled]
+4636001568 [label="Mul", color=lightblue, style=filled, shape=box]
+4634647328 -> 4636001568
+4636001664 -> 4636001568
+4636001568 -> 4636001760
+4634647328 [label="x", color=orange, style=filled]
+4636001664 [label="", color=orange, style=filled]
+4636001280 [label="Add", color=lightblue, style=filled, shape=box]
+4636001184 -> 4636001280
+4636001376 -> 4636001280
+4636001280 -> 4636001472
+4636001184 [label="", color=orange, style=filled]
+4636001376 [label="", color=orange, style=filled]
+4636001088 [label="Mul", color=lightblue, style=filled, shape=box]
+4635969280 -> 4636001088
+4636000992 -> 4636001088
+4636001088 -> 4636001184
+4635969280 [label="", color=orange, style=filled]
+4636000992 [label="", color=orange, style=filled]
+4636000896 [label="Add", color=lightblue, style=filled, shape=box]
+4636000320 -> 4636000896
+4636000800 -> 4636000896
+4636000896 -> 4636000992
+4636000320 [label="", color=orange, style=filled]
+4636000800 [label="", color=orange, style=filled]
+4636000512 [label="Mul", color=lightblue, style=filled, shape=box]
+4636000560 -> 4636000512
+4636000704 -> 4636000512
+4636000512 -> 4636000800
+4636000560 [label="", color=orange, style=filled]
+4636000704 [label="", color=orange, style=filled]
+4636000416 [label="Pow", color=lightblue, style=filled, shape=box]
+4635968560 -> 4636000416
+4636000416 -> 4636000560
+4635968560 [label="y", color=orange, style=filled]
+4635970912 [label="Add", color=lightblue, style=filled, shape=box]
+4635971008 -> 4635970912
+4635971488 -> 4635970912
+4635970912 -> 4636000320
+4635971008 [label="", color=orange, style=filled]
+4635971488 [label="", color=orange, style=filled]
+4635971392 [label="Mul", color=lightblue, style=filled, shape=box]
+4635971296 -> 4635971392
+4635968560 -> 4635971392
+4635971392 -> 4635971488
+4635971296 [label="", color=orange, style=filled]
+4635968560 [label="y", color=orange, style=filled]
+4635971104 [label="Mul", color=lightblue, style=filled, shape=box]
+4634647328 -> 4635971104
+4635971200 -> 4635971104
+4635971104 -> 4635971296
+4634647328 [label="x", color=orange, style=filled]
+4635971200 [label="", color=orange, style=filled]
+4635970864 [label="Sub", color=lightblue, style=filled, shape=box]
+4635970480 -> 4635970864
+4635970768 -> 4635970864
+4635970864 -> 4635971008
+4635970480 [label="", color=orange, style=filled]
+4635970768 [label="", color=orange, style=filled]
+4635970576 [label="Mul", color=lightblue, style=filled, shape=box]
+4635968560 -> 4635970576
+4635970672 -> 4635970576
+4635970576 -> 4635970768
+4635968560 [label="y", color=orange, style=filled]
+4635970672 [label="", color=orange, style=filled]
+4635970384 [label="Add", color=lightblue, style=filled, shape=box]
+4635969808 -> 4635970384
+4635970288 -> 4635970384
+4635970384 -> 4635970480
+4635969808 [label="", color=orange, style=filled]
+4635970288 [label="", color=orange, style=filled]
+4635969952 [label="Mul", color=lightblue, style=filled, shape=box]
+4635970048 -> 4635969952
+4635970192 -> 4635969952
+4635969952 -> 4635970288
+4635970048 [label="", color=orange, style=filled]
+4635970192 [label="", color=orange, style=filled]
+4635969904 [label="Pow", color=lightblue, style=filled, shape=box]
+4634647328 -> 4635969904
+4635969904 -> 4635970048
+4634647328 [label="x", color=orange, style=filled]
+4635969616 [label="Sub", color=lightblue, style=filled, shape=box]
+4635969712 -> 4635969616
+4635969520 -> 4635969616
+4635969616 -> 4635969808
+4635969712 [label="", color=orange, style=filled]
+4635969520 [label="", color=orange, style=filled]
+4635969184 [label="Mul", color=lightblue, style=filled, shape=box]
+4634647328 -> 4635969184
+4635969424 -> 4635969184
+4635969184 -> 4635969520
+4634647328 [label="x", color=orange, style=filled]
+4635969424 [label="", color=orange, style=filled]
+4635969136 [label="Pow", color=lightblue, style=filled, shape=box]
+4635969040 -> 4635969136
+4635969136 -> 4635969280
+4635969040 [label="", color=orange, style=filled]
+4635968848 [label="Add", color=lightblue, style=filled, shape=box]
+4635968752 -> 4635968848
+4635968944 -> 4635968848
+4635968848 -> 4635969040
+4635968752 [label="", color=orange, style=filled]
+4635968944 [label="", color=orange, style=filled]
+4635968656 [label="Add", color=lightblue, style=filled, shape=box]
+4634647328 -> 4635968656
+4635968560 -> 4635968656
+4635968656 -> 4635968752
+4634647328 [label="x", color=orange, style=filled]
+4635968560 [label="y", color=orange, style=filled]
+}
