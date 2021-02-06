@@ -143,3 +143,13 @@
     # TO-BE
     D -> B -> C -> A (generation이는 속성을 추가해서 세대별로 관리하자)
     ```
+    
+### Step16 복잡한 계산 그래프 (구현편)
+- Generation 도입 
+  + AS-IS: f = funcs.pop() 으로 마지막 원소 추출 
+  + TO-BE: 세대별(generation)로 pop
+- class Variable
+  + set_creator()에서 변수의 generation = function.generation + 1 
+  + 즉, 함수의 output은 함수 세대+1 
+- class Function 
+  + generation = max([input 변수 generation])
