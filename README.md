@@ -62,7 +62,7 @@
 
 ### Step9 함수를 더 편리하게 
 - 개선1. 파이썬 함수로 이용하기 
-  ```python
+  ```python3
   # AS-IS
   f = Square()
   y = f(x)
@@ -79,7 +79,7 @@
 - 개선3. ndarray만 취급하기
   1. 입력 차원에서 개선 : isinstance로 입력값 확인
   2. 출력 차원에서 개선 : 입력값이 ndarray여도 출력값이 int, float가 나올 수 있음. 
-  ```python
+  ```python3
     def as_array(x):
       if np.isscalar(x): return np.array(x)
    
@@ -100,7 +100,7 @@
 
 ### Step12 가변 길이 인수 (개선편)
 - 여러개의 입력값을 받을 수 있도록 unpacking 
-   ```python
+   ```python3
   # AS-IS
   class Function(self, inputs):
                  ...
@@ -129,7 +129,7 @@
 
 ### Step15 복잡한 계산 그래프 (이론편)
 - backward 시, 
-    ```python
+    ```python3
     x = Variable()
     a = A(x)
     b, c = B(a), C(a)
@@ -167,14 +167,13 @@
   
 
 ### Step18 메모리 적약 모드 
-- 로직상 메모리 사용을 개선할 수 있음(2가지)
+> 로직상 메모리 사용을 개선할 수 있음(2가지)
 
-<p>
 
 1. 역전파 시, 불필요한 미분 결과를 보관하지 않고 즉시 삭제 
-   불필요한 시점? backward 과정이 끝나고 나서의 값 = output.grad 
+  - 불필요한 시점? backward 과정이 끝나고 나서의 값 = output.grad 
   - 역전파를 통해 구하고 싶은 값은 말단 변수이므로 중간 과정의 변수는 필요하지 않음.
-    ```python
+    ```python3
     gx = f.backward(y.grad)   <- backward 후, gx를 구하면
     if not retain_grad:
         for y in f.outputs:    
