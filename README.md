@@ -67,15 +67,14 @@
   f = Square()
   y = f(x)
 
-
   # TO-BE  
   def square(x): return Square()(x)
   y = square(x)
-   ```
+  ```
 - 개선2. backward 메소드 간소화
   - x.grad = np.array(1.0) 안하도록 Variable backward 에서 구현
-  ```python
-    if self.grad is None: self.grad = np.one_likes(self.data)
+  ```
+  if self.grad is None: self.grad = np.one_likes(self.data)
    ```
 - 개선3. ndarray만 취급하기
   1. 입력 차원에서 개선 : isinstance로 입력값 확인
@@ -153,3 +152,48 @@
   + 즉, 함수의 output은 함수 세대+1 
 - class Function 
   + generation = max([input 변수 generation])
+  
+  
+### Step17 메모리 관리와 순환 참조 
+- 파이썬 메모리 관리는 1)참조카운터와 2)GC가 관리
+1. 참조카운터 증가 케이스 
+  - 대입 연산자 사용 
+  - 함수에 인수로 전달할 때
+  - 컨테이너 타입 객체(list, tuple, class)에 추가할 때 
+
+2. GC 
+  - 순환참조 시에 GC 소환
+  - 약한 참조(weakref)로 해결 가능
+  
+
+### Step18 메모리 적약 모드 
+- 로직상 메모리 사용을 개선할 수 있음(2가지)
+
+<p>
+
+1. 역전파 시, 불필요한 미분 결과를 보관하지 않고 즉시 삭제 
+   불필요한 시점? backward 과정이 끝나고 나서의 값 = output.grad 
+  - 역전파를 통해 구하고 싶은 값은 말단 변수이므로 중간 과정의 변수는 필요하지 않음.
+    ```python
+    gx = f.backward(y.grad)   <- backward 후, gx를 구하면
+    if not retain_grad:
+        for y in f.outputs:    
+            y().grad = None   <- backward input값이였던 y.grad는 필요없어짐!
+    ```
+
+<p>
+2. '역전파가 필요없는 경우용 모드' 제공
+
+  - 신경망의 과정은 학습(training), 추론(inference)로 나뉨
+    + 학습: 함수의 입력값이 inputs을 기억해야 미분할 때 쓸 수 있음(참조 카운터 +1)
+    + 추론: 위의 과정이 필요 없음.
+  - Config 클래스를 이용하여 학습/추론 구별.
+    + 학습은 세대설정(self.generation), 연결설정(set_creator)의 과정이 있음
+  - 보다 편리하게 with문을 사용하여 모드 전환 
+    ```python3
+    with using_config('enable_backprop', False):    
+        x = Variable(np.array(2.0))
+        y = square(x)
+    ```
+    
+   
