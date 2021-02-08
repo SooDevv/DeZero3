@@ -2,6 +2,10 @@ import numpy as np
 import contextlib
 import weakref
 
+
+# =============================================================================
+# Config
+# =============================================================================
 class Config:
     enable_backprop = True
 
@@ -20,6 +24,9 @@ def no_grad():
     return using_config('enable_backprop', False)
 
 
+# =============================================================================
+# Variable / Function
+# =============================================================================
 class Variable:
     __array_priority__ = 200
 
@@ -85,13 +92,13 @@ class Variable:
                     gxs = (gxs,)
 
                 for x, gx in zip(f.inputs, gxs):
-                    x.grad = gx if gx is None else x.grad + gx
+                    x.grad = gx if x.grad is None else x.grad + gx
                     if x.creator is not None:
                         funcs.append(x.creator)
 
-                if not retain_grad:
-                    for y in f.outputs:
-                        y().grad = None
+            if not retain_grad:
+                for y in f.outputs:
+                    y().grad = None
 
     def clear_grad(self):
         self.grad = None
@@ -110,7 +117,7 @@ def as_variable(obj):
 
 
 class Function:
-    def __call__(self, inputs):
+    def __call__(self, *inputs):
         inputs = [as_variable(x) for x in inputs]
         xs = [x.data for x in inputs]
         ys = self.forward(*xs)
@@ -134,6 +141,9 @@ class Function:
         raise NotImplementedError
 
 
+# =============================================================================
+# 사칙연산 / 연산자 오버로드
+# =============================================================================
 class Add(Function):
     def forward(self, x0, x1):
         y = x0 + x1
@@ -189,7 +199,7 @@ class Pow(Function):
         return y
 
     def backward(self, gy):
-        x = self.inputs
+        x, = self.inputs
         c = self.c
 
         gx = c * x ** (c - 1) * gy
