@@ -2,6 +2,8 @@ import numpy as np
 import contextlib
 import weakref
 
+import dezero
+
 
 # =============================================================================
 # Config
@@ -103,6 +105,18 @@ class Variable:
     def clear_grad(self):
         self.grad = None
 
+    def reshape(self, *shape):
+        if len(shape) == 1 and isinstance(shape[0], (tuple, list)):
+            shape = shape[0]
+            print(shape)
+        return dezero.functions.reshape(self, shape)
+
+    def transpose(self):
+        return dezero.functions.transpose(self)
+
+    @property
+    def T(self):
+        return dezero.functions.transpose(self)
 
 def as_array(x):
     if np.isscalar(x):
