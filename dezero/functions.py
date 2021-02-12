@@ -4,6 +4,9 @@ from dezero.core import as_variable
 from dezero import utils
 
 
+# =============================================================================
+# Basic functions: sin / cos / tanh / exp / log
+# =============================================================================
 class Sin(Function):
     def forward(self, x):
         y = np.sin(x)
@@ -37,6 +40,21 @@ class Tanh(Function):
         return gx
 
 
+def sin(x):
+    return Sin()(x)
+
+
+def cos(x):
+    return Cos()(x)
+
+
+def tanh(x):
+    return Tanh()(x)
+
+
+# =============================================================================
+# Tensor operations: reshape / transpose / get_item / expand_dims / flatten
+# =============================================================================
 class Reshape(Function):
     def __init__(self, shape):
         self.shape = shape
@@ -59,6 +77,19 @@ class Transpose(Function):
         return transpose(gy)
 
 
+def reshape(x, shape):
+    if x.shape == shape:
+        return as_variable(x)
+    return Reshape(shape)(x)
+
+
+def transpose(x):
+    return Transpose()(x)
+
+
+# =============================================================================
+# sum / sum_to / broadcast_to / average / matmul / linear
+# =============================================================================
 class BroadcastTo(Function):
     def __init__(self, shape):
         self.shape = shape
@@ -103,26 +134,16 @@ class Sum(Function):
         return gx
 
 
-def sin(x):
-    return Sin()(x)
+class MatMul(Function):
+    def forward(self, x, W):
+        y = x.dot(W)
+        return y
 
-
-def cos(x):
-    return Cos()(x)
-
-
-def tanh(x):
-    return Tanh()(x)
-
-
-def reshape(x, shape):
-    if x.shape == shape:
-        return as_variable(x)
-    return Reshape(shape)(x)
-
-
-def transpose(x):
-    return Transpose()(x)
+    def backward(self, gy):
+        x, W = self.inputs
+        gx = matmul(gy, W.T)
+        gW = matmul(x.T, gy)
+        return gx, gW
 
 
 def broadcast_to(x, shape):
@@ -140,3 +161,6 @@ def sum_to(x, shape):
 def sum(x, axis=None, keepdims=False):
     return Sum(axis, keepdims)(x)
 
+
+def matmul(x, W):
+    return MatMul()(x, W)
