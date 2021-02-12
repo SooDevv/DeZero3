@@ -88,7 +88,7 @@ def transpose(x):
 
 
 # =============================================================================
-# sum / sum_to / broadcast_to / average / matmul / linear
+# sum / sum_to / broadcast_to / mse / average / matmul / linear
 # =============================================================================
 class BroadcastTo(Function):
     def __init__(self, shape):
@@ -146,6 +146,20 @@ class MatMul(Function):
         return gx, gW
 
 
+class MeanSquaredError(Function):
+    def forward(self, x0, x1):
+        diff = x0 - x1
+        y = (diff ** 2).sum() / len(diff)
+        return y
+
+    def backward(self, gy):
+        x0, x1 = self.inputs
+        diff = x0 - x1
+        gx0 = gy * diff * (2. / len(diff))
+        gx1 = -gx0
+        return gx0, gx1
+
+
 def broadcast_to(x, shape):
     if x.shape == shape:
         return as_variable(x)
@@ -164,3 +178,7 @@ def sum(x, axis=None, keepdims=False):
 
 def matmul(x, W):
     return MatMul()(x, W)
+
+
+def mse(x0, x1):
+    return MeanSquaredError()(x0, x1)
