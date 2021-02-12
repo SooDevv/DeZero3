@@ -34,7 +34,7 @@ class Variable:
 
     def __init__(self, data, name=None):
         if not isinstance(data, np.ndarray):
-            raise TypeError
+            raise TypeError(f'{type(data)}는 지원하지 않습니다.')
         self.data = data
         self.grad = None
         self.name = name
