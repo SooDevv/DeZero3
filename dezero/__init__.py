@@ -19,5 +19,6 @@ else:
     from dezero import functions
 
 from dezero.utils import plot_dot_graph
+from dezero.core import Parameter
 
 setup_variable()

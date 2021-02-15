@@ -33,8 +33,9 @@ class Variable:
     __array_priority__ = 200
 
     def __init__(self, data, name=None):
-        if not isinstance(data, np.ndarray):
-            raise TypeError(f'{type(data)}는 지원하지 않습니다.')
+        if data is not None:
+            if not isinstance(data, np.ndarray):
+                raise TypeError(f'{type(data)}는 지원하지 않습니다.')
         self.data = data
         self.grad = None
         self.name = name
@@ -156,6 +157,13 @@ class Function:
 
     def backward(self, gy):
         raise NotImplementedError
+
+
+# =============================================================================
+# Parameter
+# =============================================================================
+class Parameter(Variable):
+    pass
 
 
 # =============================================================================
