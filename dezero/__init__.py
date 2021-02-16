@@ -20,5 +20,7 @@ else:
 
 from dezero.utils import plot_dot_graph
 from dezero.core import Parameter
+from dezero.layers import Layer
+from dezero.models import Model
 
 setup_variable()
