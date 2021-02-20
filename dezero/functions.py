@@ -315,9 +315,7 @@ class SoftmaxCrossEntropy(Function):
         N = x.shape[0]
         log_z = utils.logsumexp(x, axis=1)
         log_p = x - log_z
-        print('this', np.arange(N), t.ravel())
         log_p = log_p[np.arange(N), t.ravel()]
-        print(log_p)
         y = -log_p.sum() / np.float32(N)
         return y
 
@@ -335,6 +333,7 @@ class SoftmaxCrossEntropy(Function):
 
 def softmax_cross_entropy(x, t):
     return SoftmaxCrossEntropy()(x, t)
+
 
 # =============================================================================
 # Clip
