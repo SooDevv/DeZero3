@@ -18,6 +18,10 @@ class Sin(Function):
         return gx
 
 
+def sin(x):
+    return Sin()(x)
+
+
 class Cos(Function):
     def forward(self, x):
         y = np.cos(x)
@@ -27,6 +31,10 @@ class Cos(Function):
         x, = self.inputs
         gx = gy * -sin(x)
         return gx
+
+
+def cos(x):
+    return Cos()(x)
 
 
 class Tanh(Function):
@@ -40,6 +48,10 @@ class Tanh(Function):
         return gx
 
 
+def tanh(x):
+    return Tanh()(x)
+
+
 class Exp(Function):
     def forward(self, x):
         y = np.exp(x)
@@ -51,20 +63,23 @@ class Exp(Function):
         return gx
 
 
-def sin(x):
-    return Sin()(x)
-
-
-def cos(x):
-    return Cos()(x)
-
-
-def tanh(x):
-    return Tanh()(x)
-
-
 def exp(x):
     return Exp()(x)
+
+
+class Log(Function):
+    def forward(self, x):
+        y = np.log(x)
+        return y
+
+    def backward(self, gy):
+        x, = self.inputs
+        gx = gy / x
+        return gx
+
+
+def log(x):
+    return Log()(x)
 
 
 # =============================================================================
@@ -83,6 +98,12 @@ class Reshape(Function):
         return reshape(gy, self.x_shape)
 
 
+def reshape(x, shape):
+    if x.shape == shape:
+        return as_variable(x)
+    return Reshape(shape)(x)
+
+
 class Transpose(Function):
     def forward(self, x):
         y = np.transpose(x)
@@ -90,12 +111,6 @@ class Transpose(Function):
 
     def backward(self, gy):
         return transpose(gy)
-
-
-def reshape(x, shape):
-    if x.shape == shape:
-        return as_variable(x)
-    return Reshape(shape)(x)
 
 
 def transpose(x):
@@ -119,6 +134,12 @@ class BroadcastTo(Function):
         return gx
 
 
+def broadcast_to(x, shape):
+    if x.shape == shape:
+        return as_variable(x)
+    return BroadcastTo(shape)(x)
+
+
 class SumTo(Function):
     def __init__(self, shape):
         self.shape = shape
@@ -131,6 +152,12 @@ class SumTo(Function):
     def backward(self, gy):
         gx = broadcast_to(gy, self.x_shape)
         return gx
+
+
+def sum_to(x, shape):
+    if x.shape == shape:
+        return as_variable(x)
+    return SumTo(shape)(x)
 
 
 class Sum(Function):
@@ -149,6 +176,10 @@ class Sum(Function):
         return gx
 
 
+def sum(x, axis=None, keepdims=False):
+    return Sum(axis, keepdims)(x)
+
+
 class MatMul(Function):
     def forward(self, x, W):
         y = x.dot(W)
@@ -161,18 +192,18 @@ class MatMul(Function):
         return gx, gW
 
 
-class MeanSquaredError(Function):
-    def forward(self, x0, x1):
-        diff = x0 - x1
-        y = (diff ** 2).sum() / len(diff)
-        return y
+def matmul(x, W):
+    return MatMul()(x, W)
 
-    def backward(self, gy):
-        x0, x1 = self.inputs
-        diff = x0 - x1
-        gx0 = gy * diff * (2. / len(diff))
-        gx1 = -gx0
-        return gx0, gx1
+
+def linear_simple(x, W, b=None):
+    t = matmul(x, W)
+    if b is None:
+        return t
+
+    y = t + b
+    t.data = None  # Release t.data (ndarray) for memory efficiency
+    return y
 
 
 class Linear(Function):
@@ -188,40 +219,6 @@ class Linear(Function):
         gx = matmul(gy, W.T)
         gW = matmul(x.T, gy)
         return gx, gW, gb
-
-
-def broadcast_to(x, shape):
-    if x.shape == shape:
-        return as_variable(x)
-    return BroadcastTo(shape)(x)
-
-
-def sum_to(x, shape):
-    if x.shape == shape:
-        return as_variable(x)
-    return SumTo(shape)(x)
-
-
-def sum(x, axis=None, keepdims=False):
-    return Sum(axis, keepdims)(x)
-
-
-def matmul(x, W):
-    return MatMul()(x, W)
-
-
-def mse(x0, x1):
-    return MeanSquaredError()(x0, x1)
-
-
-def linear_simple(x, W, b=None):
-    t = matmul(x, W)
-    if b is None:
-        return t
-
-    y = t + b
-    t.data = None  # Release t.data (ndarray) for memory efficiency
-    return y
 
 
 def linear(x, W, b=None):
@@ -250,3 +247,113 @@ class Sigmoid(Function):
 
 def sigmoid(x):
     return Sigmoid()(x)
+
+
+def softmax_simple(x, axis=1):
+    x = as_variable(x)
+    y = exp(x)
+    sum_y = sum(x, axis=axis, keepdims=True)
+    return y / sum_y
+
+
+class Softmax(Function):
+    def __init__(self, axis=1):
+        self.axis = axis
+
+    def forward(self, x):
+        y = x - x.max(axis=self.axis, keepdims=True)
+        y = np.exp(y)
+        y /= y.sum(axis=self.axis, keepdims=True)
+        return y
+
+    def backward(self, gy):
+        y = self.outputs[0]()
+        gx = y * gy
+        sumdx = gx.sum(axis=self.axis, keepdims=True)
+        gx -= y * sumdx
+        return gx
+
+
+def softmax(x, axis=1):
+    return Softmax(axis)(x)
+
+
+# =============================================================================
+# loss function: mean_squared_error / softmax_cross_entropy
+# =============================================================================
+class MeanSquaredError(Function):
+    def forward(self, x0, x1):
+        diff = x0 - x1
+        y = (diff ** 2).sum() / len(diff)
+        return y
+
+    def backward(self, gy):
+        x0, x1 = self.inputs
+        diff = x0 - x1
+        gx0 = gy * diff * (2. / len(diff))
+        gx1 = -gx0
+        return gx0, gx1
+
+
+def mse(x0, x1):
+    return MeanSquaredError()(x0, x1)
+
+
+def softmax_cross_entropy_simple(x, t):
+    x, t = as_variable(x), as_variable(t)
+    N = x.shape[0]  # batch size
+    p = softmax(x)
+    p = clip(p, 1e-15, 1.0)  # To avoid log(0)
+    log_p = log(p)
+    tlog_p = log_p[np.arange(N), t.data]
+    y = -1 * sum(tlog_p) / N
+    return y
+
+
+class SoftmaxCrossEntropy(Function):
+    def forward(self, x, t):
+        N = x.shape[0]
+        log_z = utils.logsumexp(x, axis=1)
+        log_p = x - log_z
+        print('this', np.arange(N), t.ravel())
+        log_p = log_p[np.arange(N), t.ravel()]
+        print(log_p)
+        y = -log_p.sum() / np.float32(N)
+        return y
+
+    def backward(self, gy):
+        x, t = self.inputs
+        N, CLS_NUM = x.shape
+
+        gy *= 1/N
+        y = softmax(x)
+        # convert to one-hot
+        t_onehot = np.eye(CLS_NUM, dtype=t.dtype)[t.data]
+        y = (y - t_onehot) * gy
+        return y
+
+
+def softmax_cross_entropy(x, t):
+    return SoftmaxCrossEntropy()(x, t)
+
+# =============================================================================
+# Clip
+# =============================================================================
+class Clip(Function):
+    def __init__(self, x_min, x_max):
+        self.x_min = x_min
+        self.x_max = x_max
+
+    def forward(self, x):
+        y = np.clip(x, self.x_min, self.x_max)
+        return y
+
+    def backward(self, gy):
+        x, = self.inputs
+        mask = (x.data >= self.x_min) * (x.data <= self.x_max)
+        gx = gy * mask
+        return gx
+
+
+def clip(x, x_min, x_max):
+    return Clip(x_min, x_max)(x)
