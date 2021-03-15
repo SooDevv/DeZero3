@@ -35,6 +35,16 @@ class Dataset:
         pass
 
 
+class BigData(Dataset):
+    def __getitem__(self, idx):
+        x = np.load(f'../data/{idx}.npy')
+        t = np.load(f'../label/{idx}.npy')
+        return x, t
+
+    def __len__(self):
+        return 100000
+
+
 # =============================================================================
 # Toy datasets
 # =============================================================================
