@@ -144,5 +144,5 @@ class Adam(Optimizer):
         grad = param.grad.data
 
         m += (1 - beta1) * (grad - m)
-        v += (1 - beta2) * (grad * grad -v)
+        v += (1 - beta2) * (grad * grad - v)
         param.data -= self.lr * m / (np.sqrt(v) + eps)

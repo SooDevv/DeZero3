@@ -5,7 +5,7 @@ import dezero.functions as F
 from dezero import Dataloader, optimizers
 from dezero.models import MLP
 
-max_epoch = 300
+max_epoch = 100
 batch_size = 100
 hidden_size = 1000
 
@@ -14,8 +14,8 @@ test_dataset = dezero.datasets.MNIST(train=False)
 tr_loader = Dataloader(tr_dataset, batch_size)
 test_loader = Dataloader(test_dataset, batch_size, shuffle=False)
 
-# model = MLP((hidden_size, 10))
-model = MLP((hidden_size, hidden_size, 10), activation=F.relu)
+# model = MLP((hidden_size, 10)) + sgd -> test_acc = 92.78%
+model = MLP((hidden_size, 300, 10), activation=F.relu)  # +adam -> test_acc = 97.74%
 optimizer = optimizers.Adam().setup(model)
 
 for epoch in range(max_epoch):
