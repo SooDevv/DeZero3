@@ -28,5 +28,6 @@ else:
     import dezero.dataloaders
     import dezero.optimizers
     import dezero.functions
+    import dezero.transforms
 
 setup_variable()
