@@ -29,5 +29,6 @@ else:
     import dezero.optimizers
     import dezero.functions
     import dezero.transforms
+    import dezero.cuda
 
 setup_variable()
