@@ -1,6 +1,6 @@
 import numpy as np
 from dezero.core import Function
-from dezero.core import Function, Variable, as_variable, as_array
+from dezero.core import Function, Variable, as_variable, as_array, Config
 from dezero import utils, cuda
 
 
@@ -364,7 +364,7 @@ def softmax_cross_entropy(x, t):
 
 
 # =============================================================================
-# Clip
+# Clip / Dropout
 # =============================================================================
 class Clip(Function):
     def __init__(self, x_min, x_max):
@@ -385,6 +385,19 @@ class Clip(Function):
 
 def clip(x, x_min, x_max):
     return Clip(x_min, x_max)(x)
+
+
+def dropout(x, dropout_ratio=0.5):
+    x = as_variable(x)
+
+    if Config.train:
+        xp = cuda.get_array_module(x)
+        mask = xp.random.rand(*x.shape) > dropout_ratio
+        scale = xp.array(1.0 - dropout_ratio).astype(x.dtype)
+        y = x * mask / scale
+        return y
+    else:
+        return x
 
 
 # =============================================================================
