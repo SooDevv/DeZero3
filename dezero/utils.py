@@ -184,3 +184,10 @@ def get_file(url, file_name=None):
     print(" Done")
 
     return file_path
+
+
+# =============================================================================
+# Conv output Function
+# =============================================================================
+def get_conv_outsize(input_size, kernel_size, stride, pad):
+    return (input_size + pad * 2 - kernel_size) // stride + 1
